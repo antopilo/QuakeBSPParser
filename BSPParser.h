@@ -150,6 +150,7 @@ namespace BSPParser
 	std::vector<miptex_t> MipTextures;
 	std::vector<face_t> Faces;
 	std::vector<edge_t> Edges;
+	std::vector<short> LEdges;
 	std::vector<model_t> Models;
 
 	// Private data
@@ -253,6 +254,15 @@ namespace BSPParser
 		Read(Edges[0], edgesAmount);
 	}
 
+	void ParseLedges()
+	{
+		if (!_headerParsed) ParseHeader();
+		Seek(_header.ledges.offset);
+		uint32_t edgesAmount = _header.ledges.size / sizeof(short);
+		LEdges = std::vector<short>(edgesAmount);
+		Read(LEdges[0], edgesAmount);
+	}
+
 	void ParseModels()
 	{
 		if (!_headerParsed) ParseHeader();
@@ -270,6 +280,8 @@ namespace BSPParser
 		ParseMips();
 		ParseFaces();
 		ParseEdges();
+		ParseLedges();
 		ParseModels();
+		ParseVertices();
 	}
 }
